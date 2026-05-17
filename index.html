@@ -1,29 +1,25 @@
 <!doctype html>
 <html lang="it">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meet & React</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Meet & React</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app">
-<header class="top">
-<h1>Meet & React</h1>
-<p>Solo persone reali entro 300 metri</p>
-</header>
+  <div class="phone">
+    <main id="content"></main>
 
-<main id="content"></main>
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-page="home"><img src="nav-home.png"><span>Home</span></button>
+      <button class="nav-btn" data-page="sticker"><img src="nav-sticker.png"><span>Sticker</span></button>
+      <button class="nav-btn" data-page="chat"><img src="nav-chat.png"><span>Chat</span></button>
+      <button class="nav-btn" data-page="profilo"><img src="nav-profilo.png"><span>Profilo</span></button>
+      <button class="nav-btn" data-page="tris"><img src="nav-tris.png"><span>Tris</span></button>
+    </nav>
+  </div>
 
-<nav class="bottom-nav">
-<button class="nav-btn active" data-page="vicini"><img src="nav-vicini.png"><span>Vicini</span></button>
-<button class="nav-btn" data-page="sticker"><img src="nav-sticker.png"><span>Sticker</span></button>
-<button class="nav-btn" data-page="chat"><img src="nav-chat.png"><span>Chat</span></button>
-<button class="nav-btn" data-page="profilo"><img src="nav-profilo.png"><span>Profilo</span></button>
-<button class="nav-btn" data-page="tris"><img src="nav-tris.png"><span>Tris</span></button>
-</nav>
-
-<script src="script.js"></script>
-</div>
+  <script src="firebase-config.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

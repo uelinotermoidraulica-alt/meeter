@@ -1,0 +1,8 @@
+{
+  "name": "Meet & React",
+  "short_name": "MeetReact",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#efe3d2",
+  "theme_color": "#8b5a35"
+}
