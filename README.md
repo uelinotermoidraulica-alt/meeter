@@ -1,17 +1,16 @@
-# Meet & React - versione corretta
+# Meet & React
 
-Correzioni incluse:
-1. Pagina "Vicini" rinominata in "Home".
-2. Barra inferiore con icone immagine caricate come file PNG.
-3. Login presente nella pagina Home.
-4. Scritta "Meet & React" solo nella prima pagina Home.
-5. Profilo con interessi selezionabili.
-6. Font aggiornato in stile grafico vintage/rustico.
+Versione ispirata all'immagine mockup:
+- Home con login e GPS
+- Sticker a griglia
+- Chat separata
+- Profilo con foto, bio e interessi
+- Shop al posto di Tris
+- Tris come opzione premium a pagamento
+- Icone barra inferiore basate sulle immagini caricate
 
-File:
-- index.html
-- style.css
-- script.js
-- firebase-config.js
-- manifest.json
-- icone nav PNG
+Caricamento su GitHub Pages:
+1. Estrai lo ZIP.
+2. Carica tutti i file nel repository.
+3. Commit changes.
+4. Vai in Settings > Pages e pubblica da main/root.

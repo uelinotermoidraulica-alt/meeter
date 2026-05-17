@@ -3,6 +3,7 @@
   "short_name": "MeetReact",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#efe3d2",
-  "theme_color": "#8b5a35"
+  "background_color": "#f8efe5",
+  "theme_color": "#6b3518",
+  "icons": []
 }

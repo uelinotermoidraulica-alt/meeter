@@ -1,21 +1,38 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Meet & React</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#f6efe6" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="phone">
-    <main id="content"></main>
+  <div id="app" class="app">
+    <main id="screen" class="screen"></main>
 
-    <nav class="bottom-nav">
-      <button class="nav-btn active" data-page="home"><img src="nav-home.png"><span>Home</span></button>
-      <button class="nav-btn" data-page="sticker"><img src="nav-sticker.png"><span>Sticker</span></button>
-      <button class="nav-btn" data-page="chat"><img src="nav-chat.png"><span>Chat</span></button>
-      <button class="nav-btn" data-page="profilo"><img src="nav-profilo.png"><span>Profilo</span></button>
-      <button class="nav-btn" data-page="tris"><img src="nav-tris.png"><span>Tris</span></button>
+    <nav class="bottom-nav" aria-label="Navigazione principale">
+      <button class="nav-item active" data-page="home">
+        <img src="nav-home.jpg" alt="">
+        <span>Home</span>
+      </button>
+      <button class="nav-item" data-page="sticker">
+        <img src="nav-sticker.jpg" alt="">
+        <span>Sticker</span>
+      </button>
+      <button class="nav-item" data-page="chat">
+        <img src="nav-chat.jpg" alt="">
+        <span>Chat</span>
+      </button>
+      <button class="nav-item" data-page="profilo">
+        <img src="nav-profilo.jpg" alt="">
+        <span>Profilo</span>
+      </button>
+      <button class="nav-item" data-page="shop">
+        <img src="nav-shop.jpg" alt="">
+        <span>Shop</span>
+      </button>
     </nav>
   </div>
 

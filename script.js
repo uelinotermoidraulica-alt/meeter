@@ -1,247 +1,272 @@
-const content = document.getElementById("content");
+const screen = document.getElementById("screen");
 
 const state = {
   page: "home",
-  selectedInterests: JSON.parse(localStorage.getItem("mr_interests") || "[]"),
-  profile: JSON.parse(localStorage.getItem("mr_profile") || "{}"),
-  game: Array(9).fill(""),
-  turn: "X"
+  interests: JSON.parse(localStorage.getItem("meet_interests") || "[]"),
+  profile: JSON.parse(localStorage.getItem("meet_profile") || "{}"),
+  premiumTris: localStorage.getItem("premium_tris") === "true"
 };
 
-function setActive(page){
-  document.querySelectorAll(".nav-btn").forEach(btn=>{
+function statusbar(){
+  return `<div class="statusbar"><span>9:41</span><span>⌁ ◔ ▰</span></div>`;
+}
+
+function setPage(page){
+  state.page = page;
+  document.querySelectorAll(".nav-item").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.page === page);
   });
+
+  if(page === "home") return renderHome();
+  if(page === "sticker") return renderSticker();
+  if(page === "chat") return renderChat();
+  if(page === "profilo") return renderProfilo();
+  if(page === "shop") return renderShop();
 }
 
-function render(page){
-  state.page = page;
-  setActive(page);
-
-  if(page === "home") renderHome();
-  if(page === "sticker") renderSticker();
-  if(page === "chat") renderChat();
-  if(page === "profilo") renderProfilo();
-  if(page === "tris") renderTris();
-}
+document.querySelectorAll(".nav-item").forEach(btn => {
+  btn.addEventListener("click", () => setPage(btn.dataset.page));
+});
 
 function renderHome(){
-  content.innerHTML = `
-    <section class="page">
-      <div class="hero">
-        <h1>Meet & React</h1>
-        <p>Solo persone reali entro 300 metri.</p>
-      </div>
+  screen.innerHTML = `
+    ${statusbar()}
+    <section class="page hero">
+      <img class="hero-icon" src="nav-home.jpg" alt="">
+      <h1>Meet & React</h1>
+      <p>Solo persone reali entro 300 metri</p>
 
-      <div class="card">
-        <h2>Home</h2>
-        <p>Accedi, attiva il GPS e scopri chi è davvero vicino a te.</p>
+      <div class="card center">
+        <h2>Accedi per iniziare</h2>
+        <p>Scopri chi è davvero vicino a te.</p>
 
-        <div class="login-box">
-          <input id="email" type="email" placeholder="Email">
-          <input id="password" type="password" placeholder="Password">
-          <button class="primary" id="loginBtn">Login / Registrati</button>
-        </div>
+        <div class="input-wrap"><span>👤</span><input id="email" type="email" placeholder="Email"></div>
+        <div class="input-wrap"><span>🔒</span><input id="password" type="password" placeholder="Password"></div>
 
-        <hr style="border:0;border-top:1px solid #e5d2bc;margin:22px 0">
-
-        <button class="secondary" id="gpsBtn">Aggiorna posizione GPS</button>
-        <div id="homeStatus" class="status"></div>
+        <button class="primary" id="loginBtn">Accedi</button>
+        <p class="small-note">Non hai un account? <button class="link-btn" id="registerBtn">Registrati</button></p>
+        <button class="secondary" id="gpsBtn" style="margin-top:12px">Aggiorna posizione GPS</button>
+        <div class="status" id="homeStatus"></div>
       </div>
     </section>
   `;
 
-  document.getElementById("loginBtn").onclick = ()=>{
+  document.getElementById("loginBtn").onclick = () => {
     const email = document.getElementById("email").value.trim();
-    if(!email){
-      document.getElementById("homeStatus").textContent = "Inserisci una email.";
-      return;
-    }
-    localStorage.setItem("mr_user", email);
-    document.getElementById("homeStatus").textContent = "Login demo attivo. Per login reale serve Firebase.";
+    document.getElementById("homeStatus").textContent = email ? "Login demo attivo. Per login reale collega Firebase." : "Inserisci una email.";
+    if(email) localStorage.setItem("meet_user", email);
   };
 
-  document.getElementById("gpsBtn").onclick = ()=>{
-    const status = document.getElementById("homeStatus");
+  document.getElementById("registerBtn").onclick = () => {
+    document.getElementById("homeStatus").textContent = "Registrazione demo pronta. Per account reali serve Firebase Auth.";
+  };
+
+  document.getElementById("gpsBtn").onclick = () => {
+    const out = document.getElementById("homeStatus");
     if(!navigator.geolocation){
-      status.textContent = "GPS non disponibile.";
+      out.textContent = "GPS non disponibile.";
       return;
     }
-    status.textContent = "Richiesta posizione...";
-    navigator.geolocation.getCurrentPosition(pos=>{
-      localStorage.setItem("mr_location", JSON.stringify({
+    out.textContent = "Richiesta posizione...";
+    navigator.geolocation.getCurrentPosition(pos => {
+      localStorage.setItem("meet_location", JSON.stringify({
         lat: pos.coords.latitude,
         lng: pos.coords.longitude,
         time: Date.now()
       }));
-      status.textContent = "GPS aggiornato. Ora sei visibile entro 300 metri.";
-    }, ()=>{
-      status.textContent = "Permesso GPS negato o non disponibile.";
+      out.textContent = "GPS aggiornato. Visibilità entro 300 metri attiva.";
+    }, () => {
+      out.textContent = "Permesso GPS negato o non disponibile.";
     }, {enableHighAccuracy:true, timeout:10000});
   };
 }
 
 function renderSticker(){
-  content.innerHTML = `
+  const stickers = [
+    ["☕","Caffè insieme?"],
+    ["🍸","Drink?"],
+    ["🔥","Sei tanta roba"],
+    ["🍑","Che culo!"],
+    ["📍","Sono qui"],
+    ["🕐","Due minuti?"],
+    ["👣","Due passi?"],
+    ["🛍️","Shopping?"],
+    ["🍕","Pizza?"],
+    ["❤️","Mi piaci"],
+    ["👍","Top!"],
+    ["🎁","Per te"]
+  ];
+
+  screen.innerHTML = `
+    ${statusbar()}
     <section class="page">
-      <div class="card">
-        <h2>Sticker</h2>
-        <p>Invia una reazione veloce a una persona vicina.</p>
-        <div class="sticker-list">
-          <button class="sticker">☕ Caffè insieme?</button>
-          <button class="sticker">🍹 Drink?</button>
-          <button class="sticker">🔥 Tanta roba!</button>
-          <button class="sticker">🍑 Che culo!</button>
-          <button class="sticker">🍋 Bacetti?</button>
-          <button class="sticker">🧹 Motel?</button>
-          <button class="sticker">🍐 Che pere!</button>
-        </div>
+      <h1 class="page-title">Sticker</h1>
+      <p class="subtitle">Invia sticker divertenti nelle chat 😄</p>
+
+      <div class="tabs">
+        <button class="tab active">Tutti</button>
+        <button class="tab">Cibo</button>
+        <button class="tab">Bevande</button>
+        <button class="tab">Oggetti</button>
+        <button class="tab">Altro</button>
+      </div>
+
+      <div class="sticker-grid">
+        ${stickers.map(([emoji,label]) => `
+          <button class="sticker-card"><span class="emoji">${emoji}</span><span>${label}</span></button>
+        `).join("")}
       </div>
     </section>
   `;
 }
 
 function renderChat(){
-  content.innerHTML = `
+  screen.innerHTML = `
+    ${statusbar()}
     <section class="page">
-      <div class="card">
-        <h2>Chat</h2>
-        <p>La chat si attiva dopo uno scambio reale o dopo la sfida a tris.</p>
-        <div class="empty">Nessuna conversazione attiva.</div>
+      <h1 class="page-title">Chat</h1>
+      <p class="subtitle">Le tue conversazioni</p>
+      <div class="card empty-card">
+        <img class="empty-icon" src="nav-sticker.jpg" alt="">
+        <h2>Nessuna conversazione attiva</h2>
+        <p>Inizia a chattare dopo uno scambio reale o una sfida a tris.</p>
       </div>
     </section>
   `;
 }
 
 function renderProfilo(){
-  content.innerHTML = `
+  const interests = ["⚽ Sport","🎵 Musica","✈️ Viaggi","🎬 Cinema","🍔 Cibo","📖 Lettura","📷 Fotografia","🎨 Arte","💻 Tecnologia","🐾 Animali","🌿 Natura","🏋️ Fitness"];
+
+  screen.innerHTML = `
+    ${statusbar()}
     <section class="page">
-      <div class="card">
-        <h2>Profilo</h2>
+      <h1 class="page-title">Profilo</h1>
+      <p class="subtitle">Completa il tuo profilo per farti scoprire</p>
 
-        <label>Foto profilo</label>
-        <input id="photoInput" type="file" accept="image/*">
-        <div id="photoPreview" class="photo">◉</div>
-
-        <label>Nome</label>
-        <input id="name" placeholder="Il tuo nome">
-
-        <label>Età</label>
-        <input id="age" type="number" min="18" placeholder="Età">
-
-        <label>Bio</label>
-        <textarea id="bio" placeholder="Due righe su di te"></textarea>
-
-        <label>Interessi</label>
-        <div class="interests" id="interests">
-          ${["Caffè","Drink","Trekking","Musica","Cinema","Sport","Viaggi","Metal detecting","Cucina","Natura"].map(x=>`<button class="interest" data-interest="${x}">${x}</button>`).join("")}
-        </div>
-
-        <button class="primary" id="saveProfile" style="margin-top:18px">Salva profilo</button>
-        <div id="profileStatus" class="status"></div>
+      <div class="profile-avatar" id="avatarBox">
+        ${state.profile.photo ? `<img src="${state.profile.photo}" alt="">` : `<img class="avatar-img" src="nav-profilo.jpg" alt="">`}
+        <button class="camera" id="photoBtn">📷</button>
       </div>
+      <input id="photoInput" type="file" accept="image/*" style="display:none">
+
+      <div class="field">
+        <label>Nome</label>
+        <input id="name" placeholder="Il tuo nome" value="${state.profile.name || ""}">
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Età</label>
+          <input id="age" type="number" min="18" placeholder="La tua età" value="${state.profile.age || ""}">
+        </div>
+        <div class="field">
+          <label>Bio</label>
+          <textarea id="bio" placeholder="Racconta qualcosa di te...">${state.profile.bio || ""}</textarea>
+        </div>
+      </div>
+
+      <div class="interest-title">I tuoi interessi</div>
+      <p class="subtitle">Seleziona almeno 3 interessi</p>
+      <div class="interest-grid">
+        ${interests.map(i => `<button class="interest ${state.interests.includes(i) ? "selected" : ""}" data-interest="${i}">${i}</button>`).join("")}
+      </div>
+
+      <button class="primary" id="saveProfile" style="margin-top:18px">Salva profilo</button>
+      <div class="status" id="profileStatus"></div>
     </section>
   `;
 
-  const p = state.profile;
-  document.getElementById("name").value = p.name || "";
-  document.getElementById("age").value = p.age || "";
-  document.getElementById("bio").value = p.bio || "";
-  if(p.photo) document.getElementById("photoPreview").innerHTML = `<img src="${p.photo}">`;
-
-  document.querySelectorAll(".interest").forEach(btn=>{
-    btn.classList.toggle("selected", state.selectedInterests.includes(btn.dataset.interest));
-    btn.onclick = ()=>{
-      const v = btn.dataset.interest;
-      if(state.selectedInterests.includes(v)){
-        state.selectedInterests = state.selectedInterests.filter(x=>x!==v);
+  document.querySelectorAll(".interest").forEach(btn => {
+    btn.onclick = () => {
+      const val = btn.dataset.interest;
+      if(state.interests.includes(val)){
+        state.interests = state.interests.filter(x => x !== val);
       }else{
-        state.selectedInterests.push(v);
+        state.interests.push(val);
       }
-      localStorage.setItem("mr_interests", JSON.stringify(state.selectedInterests));
+      localStorage.setItem("meet_interests", JSON.stringify(state.interests));
       btn.classList.toggle("selected");
     };
   });
 
-  document.getElementById("photoInput").onchange = e=>{
+  document.getElementById("photoBtn").onclick = () => document.getElementById("photoInput").click();
+
+  document.getElementById("photoInput").onchange = e => {
     const file = e.target.files[0];
     if(!file) return;
     const reader = new FileReader();
-    reader.onload = ()=>{
+    reader.onload = () => {
       state.profile.photo = reader.result;
-      document.getElementById("photoPreview").innerHTML = `<img src="${reader.result}">`;
+      document.getElementById("avatarBox").innerHTML = `<img src="${reader.result}" alt=""><button class="camera" id="photoBtn">📷</button>`;
+      document.getElementById("photoBtn").onclick = () => document.getElementById("photoInput").click();
     };
     reader.readAsDataURL(file);
   };
 
-  document.getElementById("saveProfile").onclick = ()=>{
+  document.getElementById("saveProfile").onclick = () => {
     state.profile = {
       ...state.profile,
       name: document.getElementById("name").value.trim(),
       age: document.getElementById("age").value.trim(),
       bio: document.getElementById("bio").value.trim(),
-      interests: state.selectedInterests
+      interests: state.interests
     };
-    localStorage.setItem("mr_profile", JSON.stringify(state.profile));
+    localStorage.setItem("meet_profile", JSON.stringify(state.profile));
     document.getElementById("profileStatus").textContent = "Profilo salvato.";
   };
 }
 
-function renderTris(){
-  content.innerHTML = `
+function renderShop(){
+  screen.innerHTML = `
+    ${statusbar()}
     <section class="page">
+      <h1 class="page-title">Shop</h1>
+      <p class="subtitle">Sblocca funzionalità premium</p>
+
+      <div class="card shop-card">
+        <img src="nav-shop.jpg" alt="">
+        <div>
+          <h2>Gioco del Tris 👑</h2>
+          <p>Sfida gli altri utenti a partite di tris e vinci ricompense!</p>
+          <ul class="checks">
+            <li>✓ Sfide illimitate</li>
+            <li>✓ Statistiche partite</li>
+            <li>✓ Classifica globale</li>
+            <li>✓ Nessuna pubblicità</li>
+          </ul>
+          <div class="price-row">
+            <span class="price">2,99 €</span>
+            <button class="primary" id="unlockTris" style="width:auto">Sblocca ora</button>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
-        <h2>Gioco del tris</h2>
-        <p>Chi perde deve presentarsi.</p>
-        <div class="board" id="board"></div>
-        <button class="secondary" id="reset">Ricomincia</button>
-        <div id="gameStatus" class="status"></div>
+        <h3>Altre funzionalità in arrivo</h3>
+        <div class="lock-list">
+          <div class="lock-item"><span>🙂</span><div><strong>Sticker premium</strong><small>Nuovi sticker esclusivi</small></div><span class="lock">🔒</span></div>
+          <div class="lock-item"><span>🏅</span><div><strong>Badge speciali</strong><small>Mostra i tuoi achievement</small></div><span class="lock">🔒</span></div>
+          <div class="lock-item"><span>👁️</span><div><strong>Modalità invisibile</strong><small>Naviga senza essere visto</small></div><span class="lock">🔒</span></div>
+        </div>
+      </div>
+
+      <div class="card center" id="trisPreview">
+        <h2>Gioco del Tris</h2>
+        <div class="tris-board">
+          ${Array.from({length:9}).map((_,i)=>`<button class="cell">${["×","","○","○","","","○","","×"][i]}</button>`).join("")}
+        </div>
+        <div class="paid-lock">🔒</div>
+        <h2>👑 Sblocca il gioco del Tris</h2>
+        <p>Il tris è una funzionalità a pagamento nello Shop.</p>
       </div>
     </section>
   `;
 
-  const board = document.getElementById("board");
-  const status = document.getElementById("gameStatus");
-  const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-
-  function check(){
-    for(const [a,b,c] of wins){
-      if(state.game[a] && state.game[a] === state.game[b] && state.game[a] === state.game[c]){
-        return state.game[a];
-      }
-    }
-    return state.game.every(Boolean) ? "Pareggio" : "";
-  }
-
-  function draw(){
-    board.innerHTML = "";
-    state.game.forEach((v,i)=>{
-      const cell = document.createElement("button");
-      cell.className = "cell";
-      cell.textContent = v;
-      cell.onclick = ()=>{
-        if(state.game[i] || check()) return;
-        state.game[i] = state.turn;
-        state.turn = state.turn === "X" ? "O" : "X";
-        draw();
-      };
-      board.appendChild(cell);
-    });
-    const result = check();
-    status.textContent = result ? `Risultato: ${result}` : `Turno: ${state.turn}`;
-  }
-
-  document.getElementById("reset").onclick = ()=>{
-    state.game = Array(9).fill("");
-    state.turn = "X";
-    draw();
+  document.getElementById("unlockTris").onclick = () => {
+    localStorage.setItem("premium_tris", "true");
+    alert("Demo: opzione Tris sbloccata. Per pagamento reale serve Stripe/App Store.");
   };
-
-  draw();
 }
 
-document.querySelectorAll(".nav-btn").forEach(btn=>{
-  btn.onclick = ()=>render(btn.dataset.page);
-});
-
-render("home");
+setPage("home");

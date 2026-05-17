@@ -1,6 +1,6 @@
-// Configurazione Firebase.
-// Al momento l'app usa localStorage per demo.
-// Inserendo qui Firebase Auth + Firestore si può rendere reale login, profili e vicini.
+// Configurazione Firebase futura.
+// Al momento questa app funziona come demo statica su GitHub Pages.
+// Per login reale, profili veri, chat e geolocalizzazione tra utenti serve Firebase Auth + Firestore.
 
 window.firebaseConfig = {
   apiKey: "",
