@@ -17,3 +17,6 @@ Caricamento su GitHub Pages:
 
 
 Aggiornamento font: titoli in stile gotico/fantasy tipo immagine Basil Chips.
+
+
+Aggiornamento: pagina Chat trasformata in Valutation con valutazione da 1 a 5 stelle e commento.

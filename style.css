@@ -574,3 +574,68 @@ textarea,
     font-family:'Oswald', sans-serif !important;
     letter-spacing:.03em;
 }
+
+
+
+
+/* FORCE BASIL FONT */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Oswald:wght@300;400;500;600&display=swap');
+
+*{
+    font-family:'Oswald', sans-serif !important;
+}
+
+h1,
+h2,
+h3,
+.hero-title,
+.logo-title,
+.page-title,
+.brand-title{
+    font-family:'Cinzel', serif !important;
+    text-transform:uppercase !important;
+    letter-spacing:0.15em !important;
+    font-weight:700 !important;
+    color:#2a180d !important;
+}
+
+h1{
+    font-size:44px !important;
+}
+
+h2{
+    font-size:34px !important;
+}
+
+.nav-item,
+button,
+input,
+textarea,
+p,
+span,
+label{
+    font-family:'Oswald', sans-serif !important;
+}
+
+
+
+/* VALUTATION PAGE */
+.rating-box{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin:18px 0;
+}
+.star-btn{
+  border:0;
+  background:transparent;
+  font-size:38px;
+  line-height:1;
+  color:#b79a80;
+  padding:4px;
+}
+.star-btn.active{
+  color:#6b3518;
+  filter:drop-shadow(0 3px 5px rgba(78,45,22,.16));
+}

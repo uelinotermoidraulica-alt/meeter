@@ -19,7 +19,7 @@ function setPage(page){
 
   if(page === "home") return renderHome();
   if(page === "sticker") return renderSticker();
-  if(page === "chat") return renderChat();
+  if(page === "valutation") return renderValutation();
   if(page === "profilo") return renderProfilo();
   if(page === "shop") return renderShop();
 }
@@ -120,20 +120,117 @@ function renderSticker(){
   `;
 }
 
-function renderChat(){
+
+function renderValutation(){
   screen.innerHTML = `
     ${statusbar()}
     <section class="page">
-      <h1 class="page-title">Chat</h1>
-      <p class="subtitle">Le tue conversazioni</p>
-      <div class="card empty-card">
-        <img class="empty-icon" src="nav-sticker.jpg" alt="">
-        <h2>Nessuna conversazione attiva</h2>
-        <p>Inizia a chattare dopo uno scambio reale o una sfida a tris.</p>
+      <h1 class="page-title">Valutation</h1>
+      <p class="subtitle">Valuta le persone incontrate dal vivo</p>
+
+      <div class="card center">
+        <h2>Dai una valutazione</h2>
+        <p>Dopo un incontro reale puoi lasciare una valutazione educata e rispettosa.</p>
+
+        <div class="input-wrap">
+          <span>👤</span>
+          <input id="ratedName" type="text" placeholder="Nome della persona">
+        </div>
+
+        <div class="rating-box">
+          <button class="star-btn" data-star="1">☆</button>
+          <button class="star-btn" data-star="2">☆</button>
+          <button class="star-btn" data-star="3">☆</button>
+          <button class="star-btn" data-star="4">☆</button>
+          <button class="star-btn" data-star="5">☆</button>
+        </div>
+
+        <textarea id="ratingText" placeholder="Scrivi un commento breve e rispettoso..."></textarea>
+
+        <button class="primary" id="saveRating" style="margin-top:14px;">Salva valutazione</button>
+        <div class="status" id="ratingStatus"></div>
+      </div>
+
+      <div class="card">
+        <h2>Le tue valutazioni</h2>
+        <div id="ratingsList" class="lock-list"></div>
       </div>
     </section>
   `;
+
+  let selectedRating = 0;
+  const stars = document.querySelectorAll(".star-btn");
+
+  function paintStars(){
+    stars.forEach(btn => {
+      const value = Number(btn.dataset.star);
+      btn.textContent = value <= selectedRating ? "★" : "☆";
+      btn.classList.toggle("active", value <= selectedRating);
+    });
+  }
+
+  stars.forEach(btn => {
+    btn.onclick = () => {
+      selectedRating = Number(btn.dataset.star);
+      paintStars();
+    };
+  });
+
+  function renderRatings(){
+    const list = document.getElementById("ratingsList");
+    const ratings = JSON.parse(localStorage.getItem("meet_ratings") || "[]");
+
+    if(!ratings.length){
+      list.innerHTML = `<div class="lock-item"><span>⭐</span><div><strong>Nessuna valutazione</strong><small>Le valutazioni salvate appariranno qui.</small></div></div>`;
+      return;
+    }
+
+    list.innerHTML = ratings.map(r => `
+      <div class="lock-item">
+        <span>⭐</span>
+        <div>
+          <strong>${r.name} — ${"★".repeat(r.stars)}${"☆".repeat(5-r.stars)}</strong>
+          <small>${r.text || "Nessun commento"}</small>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  document.getElementById("saveRating").onclick = () => {
+    const name = document.getElementById("ratedName").value.trim();
+    const text = document.getElementById("ratingText").value.trim();
+    const status = document.getElementById("ratingStatus");
+
+    if(!name){
+      status.textContent = "Inserisci il nome della persona.";
+      return;
+    }
+
+    if(!selectedRating){
+      status.textContent = "Scegli da 1 a 5 stelle.";
+      return;
+    }
+
+    const ratings = JSON.parse(localStorage.getItem("meet_ratings") || "[]");
+    ratings.unshift({
+      name,
+      stars: selectedRating,
+      text,
+      date: new Date().toISOString()
+    });
+
+    localStorage.setItem("meet_ratings", JSON.stringify(ratings.slice(0,20)));
+    status.textContent = "Valutazione salvata.";
+    document.getElementById("ratedName").value = "";
+    document.getElementById("ratingText").value = "";
+    selectedRating = 0;
+    paintStars();
+    renderRatings();
+  };
+
+  renderRatings();
 }
+
 
 function renderProfilo(){
   const interests = ["⚽ Sport","🎵 Musica","✈️ Viaggi","🎬 Cinema","🍔 Cibo","📖 Lettura","📷 Fotografia","🎨 Arte","💻 Tecnologia","🐾 Animali","🌿 Natura","🏋️ Fitness"];
